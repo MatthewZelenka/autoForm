@@ -91,6 +91,9 @@ class autoForm:
             elif currentUrl.find("https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/alreadyresponded") != -1:
                 print("Form already answered")
                 break
+            elif currentUrl.find("https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/closedform") != -1:
+                print("Form is closed")
+                break
 
 
     def run(self):
@@ -115,8 +118,8 @@ class autoForm:
             self.driver.get(self.url) # goes to starting url
             self.autoLogin()
             self.fillForm()
-        except:
-            print("Driver has stopped working\nShutting down...") # if something fails in the process of logging in to class it shuts down
+        except Exception as err:
+            print("Driver has stopped working\nShutting down...\n", err) # if something fails in the process of logging in to class it shuts down
 
     def quit(self):
         self.driver.quit() # quits webdriver
@@ -126,7 +129,7 @@ class autoForm:
 # Program starts running
 if __name__ == '__main__':
     #login
-    form = autoForm(url = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform" ,browser = "C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe" , browserHide = False)
+    form = autoForm(url = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform", browserHide = False)
     form.run()
     form.quit()
     pass
