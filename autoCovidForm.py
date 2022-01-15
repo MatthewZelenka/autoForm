@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from datetime import time as dttime
-import time, json, os, sys, re
+import time, json, os, sys, re, webScraper
 
 print(len(sys.argv))
 print(sys.argv)
@@ -20,24 +20,25 @@ valURL = re.compile( # regex to see if valid url
     r'(?::\d+)?' # optional port
     r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
+configFile = "user.json"
 
-class autoForm:
-    def __init__(self, url, webDriverPath="./chromedriver", browser=None, browserHide = False):
-        #url of the page we want to run
-        self.url = url
-        self.webDriverPath = webDriverPath
-        self.browser = browser
-        self.browserHide = browserHide
+class autoForm(webScraper.baseChromeWebScraper):
+    # def __init__(self, url, webDriverPath="./chromedriver", browser=None, browserHide = False):
+    #     #url of the page we want to run
+    #     self.url = url
+    #     self.webDriverPath = webDriverPath
+    #     self.browser = browser
+    #     self.browserHide = browserHide
 
-    def waitUrlChange(self, currentURL): # function to wait for next page to load before continuing 
-        WebDriverWait(self.driver, 10).until(lambda driver: driver.current_url != currentURL)
+    # def waitUrlChange(self, currentURL): # function to wait for next page to load before continuing 
+    #     WebDriverWait(self.driver, 10).until(lambda driver: driver.current_url != currentURL)
 
     def autoLogin(self):
         while True:
             currentUrl = self.driver.current_url
             if currentUrl.find("https://accounts.google.com/signin/v2/identifier?") != -1: # logs you in to google in order to access the link provided 
                 print("Logging in to google...")
-                with open("user.json", "r") as read_file: # puts email in to google login from user.json
+                with open(configFile, "r") as read_file: # puts email in to google login from user.json
                     data = json.load(read_file)
                     login = self.driver.find_element_by_css_selector(".whsOnd.zHQkBf")
                     login.send_keys(data["user"]["email"])
@@ -46,7 +47,7 @@ class autoForm:
                 
             elif currentUrl.find("https://accounts.google.com/signin/v2/challenge/pwd?") != -1: # next step in google log in for password
                 print("Putting in password...")
-                with open("user.json", "r") as read_file: # puts password in to google login from user.json
+                with open(configFile, "r") as read_file: # puts password in to google login from user.json
                     data = json.load(read_file)
                     login = self.driver.find_element_by_css_selector(".whsOnd.zHQkBf")
                     login.send_keys(data["user"]["password"])
@@ -56,7 +57,7 @@ class autoForm:
             elif currentUrl.find("https://google.yrdsb.ca/LoginFormIdentityProvider/Login.aspx?") != -1: # YRDSB has stupid special login page for google accounts so it goes through that
                 print("Logging in to YRDSB...")
                 time.sleep(0.5)
-                with open("user.json", "r") as read_file: # gets user and password from user.json and puts it into login page for YRDSB
+                with open(configFile, "r") as read_file: # gets user and password from user.json and puts it into login page for YRDSB
                     data = json.load(read_file)
                     login = self.driver.find_element_by_id("UserName")
                     login.send_keys(data["user"]["userName"])
@@ -73,7 +74,7 @@ class autoForm:
             currentUrl = self.driver.current_url
             if currentUrl.find("https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform") != -1: # fills out form 
                 print("Filling out form...")
-                with open("user.json", "r") as read_file: # puts email in to google login from user.json
+                with open(configFile, "r") as read_file: # puts email in to google login from user.json
                     data = json.load(read_file)
                     textBoxes = self.driver.find_elements_by_class_name("quantumWizTextinputPaperinputInput")
                     textBoxes[0].send_keys(data["user"]["firstName"])
