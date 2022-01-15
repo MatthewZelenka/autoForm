@@ -126,7 +126,7 @@ class autoForm(webScraper.baseChromeWebScraper):
 # Program starts running
 if __name__ == '__main__':
     #login
-    form = autoForm(url = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform", browserHide = False)
+    form = autoForm(url = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform", browserHide = False, logLevel = 3)
     form.run()
     form.quit()
     pass
