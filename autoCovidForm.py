@@ -36,22 +36,33 @@ class autoForm(webScraper.baseChromeWebScraper):
     def autoLogin(self):
         while True:
             currentUrl = self.driver.current_url
+            print(self.driver.current_url)
             if currentUrl.find("https://accounts.google.com/signin/v2/identifier?") != -1: # logs you in to google in order to access the link provided 
                 print("Logging in to google...")
                 with open(configFile, "r") as read_file: # puts email in to google login from user.json
                     data = json.load(read_file)
-                    login = self.driver.find_element_by_css_selector(".whsOnd.zHQkBf")
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".whsOnd.zHQkBf")))
+                    login = self.driver.find_element(By.CSS_SELECTOR, ".whsOnd.zHQkBf")
                     login.send_keys(data["user"]["email"])
-                    self.driver.find_element_by_class_name("VfPpkd-dgl2Hf-ppHlrf-sM5MNb").click()
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "VfPpkd-dgl2Hf-ppHlrf-sM5MNb")))
+                    self.driver.find_element(By.CLASS_NAME, "VfPpkd-dgl2Hf-ppHlrf-sM5MNb").click()
                 self.waitUrlChange(currentUrl)
                 
             elif currentUrl.find("https://accounts.google.com/signin/v2/challenge/pwd?") != -1: # next step in google log in for password
                 print("Putting in password...")
                 with open(configFile, "r") as read_file: # puts password in to google login from user.json
                     data = json.load(read_file)
-                    login = self.driver.find_element_by_css_selector(".whsOnd.zHQkBf")
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".whsOnd.zHQkBf")))
+                    login = self.driver.find_element(By.CSS_SELECTOR, ".whsOnd.zHQkBf")
                     login.send_keys(data["user"]["password"])
-                    self.driver.find_element_by_class_name("VfPpkd-dgl2Hf-ppHlrf-sM5MNb").click()
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "VfPpkd-dgl2Hf-ppHlrf-sM5MNb")))
+                    self.driver.find_element(By.CLASS_NAME, "VfPpkd-dgl2Hf-ppHlrf-sM5MNb").click()
+                self.waitUrlChange(currentUrl)
+            
+            elif currentUrl.find("https://accounts.google.com/speedbump/") != -1: # next step in google log in for password
+                print("Speedbumping...")
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button")))
+                self.driver.find_element(By.CSS_SELECTOR, "#view_container > div > div > div.pwWryf.bxPAYd > div > div.zQJV3 > div > div.qhFLie > div > div > button").click()
                 self.waitUrlChange(currentUrl)
             
             elif currentUrl.find("https://google.yrdsb.ca/LoginFormIdentityProvider/Login.aspx?") != -1: # YRDSB has stupid special login page for google accounts so it goes through that
@@ -59,12 +70,17 @@ class autoForm(webScraper.baseChromeWebScraper):
                 time.sleep(0.5)
                 with open(configFile, "r") as read_file: # gets user and password from user.json and puts it into login page for YRDSB
                     data = json.load(read_file)
-                    login = self.driver.find_element_by_id("UserName")
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "UserName")))
+                    login = self.driver.find_element(By.ID, "UserName")
                     login.send_keys(data["user"]["userName"])
-                    login = self.driver.find_element_by_id("Password")
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "Password")))
+                    login = self.driver.find_element(By.ID, "Password")
                     login.send_keys(data["user"]["password"])
-                    self.driver.find_element_by_name("LoginButton").click()
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "LoginButton")))
+                    self.driver.find_element(By.NAME, "LoginButton").click()
                 self.waitUrlChange(currentUrl)
+            elif currentUrl.find("https://accounts.google.com/signin/continue?") != -1: # YRDSB has stupid special login page for google accounts so it goes through that
+                self.waitUrlChange(currentURL=currentUrl, waitTime=2)
             else:
                 break
         pass
@@ -76,13 +92,16 @@ class autoForm(webScraper.baseChromeWebScraper):
                 print("Filling out form...")
                 with open(configFile, "r") as read_file: # puts email in to google login from user.json
                     data = json.load(read_file)
-                    textBoxes = self.driver.find_elements_by_class_name("quantumWizTextinputPaperinputInput")
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "quantumWizTextinputPaperinputInput")))
+                    textBoxes = self.driver.find_elements(By.CLASS_NAME, "quantumWizTextinputPaperinputInput")
                     textBoxes[0].send_keys(data["user"]["firstName"])
                     textBoxes[1].send_keys(data["user"]["lastName"])
-                    radioButton = self.driver.find_elements_by_class_name("appsMaterialWizToggleRadiogroupOffRadio")
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "appsMaterialWizToggleRadiogroupOffRadio")))
+                    radioButton = self.driver.find_elements(By.CLASS_NAME, "appsMaterialWizToggleRadiogroupOffRadio")
                     radioButton[0].click()
                     time.sleep(5)
-                    submit = self.driver.find_element_by_class_name("appsMaterialWizButtonPaperbuttonContent")
+                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonContent")))
+                    submit = self.driver.find_element(By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonContent")
                     submit.click()
                 self.waitUrlChange(currentUrl)
                 break
@@ -98,32 +117,9 @@ class autoForm(webScraper.baseChromeWebScraper):
 
 
     def run(self):
-        try:
-            # set up
-            caps = DesiredCapabilities().CHROME
-            # caps["pageLoadStrategy"] = "normal"  #  complete
-            #caps["pageLoadStrategy"] = "eager"  #  interactive
-            # caps["pageLoadStrategy"] = "none"   #  undefined
-
-            chromeOptions = webdriver.chrome.options.Options()
-            if self.browserHide == True: # hides web browser if true
-                chromeOptions.headless = True
-            try:
-                if self.browser != None: # uses chrome by default if put in another browser location trys to use that browser
-                    chromeOptions.binary_location = self.browser
-            except:
-                print("Browser in that location does not exist")
-
-            # initiating the webdriver. Parameter includes the path of the webdriver.
-            self.driver = webdriver.Chrome(desired_capabilities=caps, executable_path=self.webDriverPath, options=chromeOptions)
-            self.driver.get(self.url) # goes to starting url
-            self.autoLogin()
-            self.fillForm()
-        except Exception as err:
-            print("Driver has stopped working\nShutting down...\n", err) # if something fails in the process of logging in to class it shuts down
-
-    def quit(self):
-        self.driver.quit() # quits webdriver
+        self.setup()
+        self.autoLogin()
+        self.fillForm()
 
 
 
