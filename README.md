@@ -2,7 +2,7 @@
 Auto fill covid form for yrdsb\
 Uses selenium and chrome webdriver
 ## Requirements
-Python 3.10+
+[Python 3.10+](https://www.python.org/downloads/)
 ## Modules
 - selenium
 - bs4
