@@ -7,7 +7,7 @@ Uses selenium and chrome webdriver
 - Chrome based browser
 ## Modules
 - selenium
-- bs4
+- beautifulsoup4
 - requests
 - lxml
 ## How to setup
