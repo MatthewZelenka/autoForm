@@ -1,6 +1,13 @@
 # AutoCovidForm
 Auto fill covid form for yrdsb\
 Uses selenium and chrome webdriver
+## Requirements
+Python 3.10+
+## Modules
+- selenium
+- bs4
+- requests
+- lxml
 ## How to setup
 1. Install the program requirements with command below
 ```
@@ -17,3 +24,4 @@ Run autoCovidForm.py and it will fill out the google form
 python autoCovidForm.py
 ```
 *This program has not been tested on macOS and on windows 7 or lower so it may not work correctly on those operating systems*
+> Disclaimer: for educational purpose only.
