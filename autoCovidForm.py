@@ -84,26 +84,19 @@ class autoForm(webScraper.baseChromeWebScraper):
                 WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonLabel.quantumWizButtonPaperbuttonLabel.exportLabel")))
                 clearForm = self.driver.find_element(By.CLASS_NAME, "freebirdFormviewerViewNavigationClearButton").find_element(By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonLabel.quantumWizButtonPaperbuttonLabel.exportLabel")
                 clearForm.click()
+                
                 WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "appsMaterialWizDialogPaperdialogEl.freebirdFormviewerViewNavigationClearDialog.appsMaterialWizDialogPaperdialogTransitionZoom.appsMaterialWizDialogEl.isOpen")))
                 clearFormButtons = self.driver.find_element(By.CLASS_NAME, "appsMaterialWizDialogPaperdialogEl.freebirdFormviewerViewNavigationClearDialog.appsMaterialWizDialogPaperdialogTransitionZoom.appsMaterialWizDialogEl.isOpen").find_elements(By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonLabel.quantumWizButtonPaperbuttonLabel.exportLabel")
                 for button in clearFormButtons:
                     if button.text == "Clear form":
                         button.click()
-                # WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#mG61Hd > div.freebirdFormviewerViewFormCard.exportFormCard > div > div.freebirdFormviewerViewNavigationNavControls > div.freebirdFormviewerViewNavigationButtonsAndProgress.hasClearButton > div.freebirdFormviewerViewNavigationClearButton > div")))
-                # clearForm = self.driver.find_element(By.CSS_SELECTOR, "#mG61Hd > div.freebirdFormviewerViewFormCard.exportFormCard > div > div.freebirdFormviewerViewNavigationNavControls > div.freebirdFormviewerViewNavigationButtonsAndProgress.hasClearButton > div.freebirdFormviewerViewNavigationClearButton > div")
-                # clearForm.click()
-                # WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.appsMaterialWizDialogBackground.isOpen > div > div.appsMaterialWizDialogPaperdialogEl.freebirdFormviewerViewNavigationClearDialog.appsMaterialWizDialogPaperdialogTransitionZoom.appsMaterialWizDialogEl.isOpen > div.appsMaterialWizDialogPaperdialogBottomButtons.exportButtons > div:nth-child(2)")))
-                # clearForm = self.driver.find_element(By.CSS_SELECTOR, "body > div.appsMaterialWizDialogBackground.isOpen > div > div.appsMaterialWizDialogPaperdialogEl.freebirdFormviewerViewNavigationClearDialog.appsMaterialWizDialogPaperdialogTransitionZoom.appsMaterialWizDialogEl.isOpen > div.appsMaterialWizDialogPaperdialogBottomButtons.exportButtons > div:nth-child(2)")
-                # clearForm.click()
                 time.sleep(1)
                 WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseRoot")))
                 questions = self.driver.find_elements(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseRoot")
-                print(len(questions))
                 with open(configFile, "r") as read_file: # puts email in to google login from user.json
                     data = json.load(read_file)
                     for question in questions:
-                        WebDriverWait(question, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseHeader")))
-                        print("\""+question.find_element(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseHeader").text+"\"")                        
+                        WebDriverWait(question, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseHeader")))                     
                         match (str(question.find_element(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseHeader").text)):
                             case "Student First Name *":
                                 WebDriverWait(question, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "quantumWizTextinputPaperinputInput")))
@@ -123,8 +116,7 @@ class autoForm(webScraper.baseChromeWebScraper):
                 time.sleep(5)
                 WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "freebirdFormviewerViewNavigationLeftButtons")))
                 submit = self.driver.find_element(By.CLASS_NAME, "freebirdFormviewerViewNavigationLeftButtons").find_element(By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonContent")
-                print(submit.text)
-                # submit.click()
+                submit.click()
                 self.waitUrlChange(currentUrl)
                 break
             elif currentUrl.find("https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/closedform") != -1: 
