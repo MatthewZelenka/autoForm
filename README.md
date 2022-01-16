@@ -16,3 +16,4 @@ Run autoCovidForm.py and it will fill out the google form
 ```
 python autoCovidForm.py
 ```
+*This program has not been tested on macOS and on windows 7 or lower*
