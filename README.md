@@ -4,6 +4,7 @@ Uses selenium and chrome webdriver
 ## Requirements
 - [Python 3.10+](https://www.python.org/downloads/)
 - pip (*should come installed with python else follow [guide](https://pip.pypa.io/en/latest/installation/)*)
+- Chrome based browser
 ## Modules
 - selenium
 - bs4
