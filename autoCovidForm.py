@@ -27,7 +27,6 @@ class autoForm(webScraper.baseChromeWebScraper):
     def autoLogin(self):
         while True:
             currentUrl = self.driver.current_url
-            print(self.driver.current_url)
             if currentUrl.find("https://accounts.google.com/signin/v2/identifier?") != -1: # logs you in to google in order to access the link provided 
                 print("Logging in to google...")
                 with open(configFile, "r") as read_file: # puts email in to google login from user.json
