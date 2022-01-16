@@ -1,12 +1,10 @@
 # python 3.10 or higher
 import os, sys, requests, zipfile
-from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup, SoupStrainer
 
 def autoInstall(browserPath = None):
     def getLinkFromKeyword(site, keyword): #gets chrome driver version link from the site and current version of browser
-        req = Request(site)
-        html_page = urlopen(req) # gets webpage data
+        html_page = requests.get(url = site).text
 
         soup = BeautifulSoup(html_page, features="lxml", parse_only=SoupStrainer('a')) # into bs object
 
@@ -20,7 +18,8 @@ def autoInstall(browserPath = None):
         downloadUrlBase = "https://chromedriver.storage.googleapis.com/"
         osTypeToDriverZip = {
             "win32":"chromedriver_win32.zip",
-            "linux":"chromedriver_linux64.zip"
+            "linux":"chromedriver_linux64.zip",
+            "darwin":"chromedriver_mac64.zip"
         }
         url = downloadUrlBase+downloadPage[downloadPage.find("path=")+5:]+osTypeToDriverZip[osType] # the combining
         r = requests.get(url, allow_redirects=True)
@@ -72,6 +71,24 @@ def autoInstall(browserPath = None):
                     print(browserPath,"is not a valid path to file")
                     exit()
             version = os.popen(browserPath+" --version").read().split(" ")[-2]
+            finalDriverPath = extractDriver(downloadDriver(downloadPage=getLinkFromKeyword(site=chromeDriverSite, keyword=version.split(".")[0]), osType=sys.platform))
+            os.chmod(finalDriverPath, 755)
+        case "darwin": 
+            print (os.path.abspath(__file__))
+            possiblePaths = ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
+            if browserPath == None: # if browser path is not predetermined runs through expected locations
+                for path in possiblePaths:
+                    if os.path.isfile(path):
+                        browserPath = path
+                        break
+                    elif path == possiblePaths[-1]:
+                        print("Chrome browser not found please download or set explicit location")
+                        exit()
+            else:
+                if os.path.isfile(browserPath) == False: 
+                    print(browserPath,"is not a valid path to file")
+                    exit()
+            version = os.popen(browserPath.replace(" ","\\ ")+" --version").read().split(" ")[-2]
             finalDriverPath = extractDriver(downloadDriver(downloadPage=getLinkFromKeyword(site=chromeDriverSite, keyword=version.split(".")[0]), osType=sys.platform))
             os.chmod(finalDriverPath, 755)
         case _:
