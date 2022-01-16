@@ -1,3 +1,4 @@
+# python 3.10 or higher
 import os, sys, requests, zipfile
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup, SoupStrainer
@@ -36,9 +37,28 @@ def autoInstall(browserPath = None):
         return os.path.dirname(filePath)+"/chromedriver"
 
     chromeDriverSite = "https://chromedriver.chromium.org/downloads"
-    if sys.platform == "win32": # checks to see if platform is windows
-        if sys.getwindowsversion().major == 10: # checks to see if running windows 10
-            possiblePaths = [os.environ["ProgramFiles"]+"\Google\Chrome\Application\chrome.exe",os.environ["ProgramFiles(x86)"]+"\Google\Chrome\Application\chrome.exe",os.environ["LocalAppData"]+"\Google\Chrome\Application\chrome.exe"]
+    match sys.platform:
+        case "win32":
+            if sys.getwindowsversion().major == 10: # checks to see if running windows 10
+                possiblePaths = [os.environ["ProgramFiles"]+"\Google\Chrome\Application\chrome.exe",os.environ["ProgramFiles(x86)"]+"\Google\Chrome\Application\chrome.exe",os.environ["LocalAppData"]+"\Google\Chrome\Application\chrome.exe"]
+                if browserPath == None: # if browser path is not predetermined runs through expected locations
+                    for path in possiblePaths:
+                        if os.path.isfile(path):
+                            browserPath = path
+                            break
+                        elif path == possiblePaths[-1]:
+                            print("Chrome browser not found please download or set explicit location")
+                            exit()
+                else:
+                    if os.path.isfile(browserPath) == False: 
+                        print(browserPath,"is not a valid path to file")
+                        exit()
+                version = os.popen("wmic datafile where 'name=\""+browserPath.replace("\\", "\\\\").replace("/", "\\\\")+"\"' get version").read().splitlines()[2] # wmic datafile where 'name="C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"' get version
+                finalDriverPath = extractDriver(downloadDriver(downloadPage=getLinkFromKeyword(site=chromeDriverSite, keyword=version.split(".")[0]), osType=sys.platform))
+            else:
+                raise Exception("Automatic drivers unable to be downloaded for Windows "+str(sys.getwindowsversion().major)+" go to \""+chromeDriverSite+"\" to download manually for your chrome based browser and put in the folder \""+os.path.dirname(__file__)+"\"")
+        case "linux":
+            possiblePaths = ["/usr/bin/google-chrome"]
             if browserPath == None: # if browser path is not predetermined runs through expected locations
                 for path in possiblePaths:
                     if os.path.isfile(path):
@@ -51,29 +71,11 @@ def autoInstall(browserPath = None):
                 if os.path.isfile(browserPath) == False: 
                     print(browserPath,"is not a valid path to file")
                     exit()
-            version = os.popen("wmic datafile where 'name=\""+browserPath.replace("\\", "\\\\").replace("/", "\\\\")+"\"' get version").read().splitlines()[2] # wmic datafile where 'name="C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"' get version
+            version = os.popen(browserPath+" --version").read().split(" ")[-2]
             finalDriverPath = extractDriver(downloadDriver(downloadPage=getLinkFromKeyword(site=chromeDriverSite, keyword=version.split(".")[0]), osType=sys.platform))
-        else:
-            raise Exception("Automatic drivers unable to be downloaded for Windows "+str(sys.getwindowsversion().major)+" go to \""+chromeDriverSite+"\" to download manually for your chrome based browser and put in the folder \""+os.path.dirname(__file__)+"\"")
-    elif sys.platform == "linux":
-        possiblePaths = ["/usr/bin/google-chrome"]
-        if browserPath == None: # if browser path is not predetermined runs through expected locations
-            for path in possiblePaths:
-                if os.path.isfile(path):
-                    browserPath = path
-                    break
-                elif path == possiblePaths[-1]:
-                    print("Chrome browser not found please download or set explicit location")
-                    exit()
-        else:
-            if os.path.isfile(browserPath) == False: 
-                print(browserPath,"is not a valid path to file")
-                exit()
-        version = os.popen(browserPath+" --version").read().split(" ")[-2]
-        finalDriverPath = extractDriver(downloadDriver(downloadPage=getLinkFromKeyword(site=chromeDriverSite, keyword=version.split(".")[0]), osType=sys.platform))
-        os.chmod(finalDriverPath, 755)
-    else:
-        raise Exception("Automatic drivers unable to be downloaded for "+sys.platform+" go to \""+chromeDriverSite+"\" to download manually for your chrome based browser and put in the folder \""+os.path.dirname(__file__)+"\"")
+            os.chmod(finalDriverPath, 755)
+        case _:
+            raise Exception("Automatic drivers unable to be downloaded for "+sys.platform+" go to \""+chromeDriverSite+"\" to download manually for your chrome based browser and put in the folder \""+os.path.dirname(__file__)+"\"")
     return finalDriverPath
 
 if __name__=="__main__":
