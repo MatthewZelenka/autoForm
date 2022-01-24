@@ -96,6 +96,11 @@ class autoForm(webScraper.baseChromeWebScraper):
                                 for choice in choices:
                                     if choice.text == "Yes":
                                         choice.click()
+                            case "Have you completed the self-screening test? *\nCOVID 19 School and Child Care Screening Tool is available at https://covid-19.ontario.ca/school-screening/ *Important Update: The Ministry Of Education and the Chief Medical Officer of Health https://www2.yrdsb.ca/sites/default/files/2022-01/EDU-JointParentsLetterJanuary182022-EN.pdf have provided additional information that may affect your screening results, including:":
+                                choices = question.find_elements(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionRadioChoice.freebirdFormviewerComponentsQuestionRadioOptionContainer")
+                                for choice in choices:
+                                    if choice.text == "Yes":
+                                        choice.click()
                             case _:
                                 print("Question not found")
                 time.sleep(5)
