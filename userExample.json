@@ -1,10 +1,13 @@
 {
+    "type":"yrdsbCovidForm",
+    "enabled": true,
     "user": {
-        "enabled": true,
-        "firstName": "firstName",
-        "lastName": "lastName",
         "userName": "studentID",
         "email": "studentEmail",
         "password": "studentPassword"
+    },
+    "formInfo": {
+        "firstName": "firstName",
+        "lastName": "lastName"
     }
 }
