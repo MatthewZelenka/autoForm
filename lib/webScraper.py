@@ -8,6 +8,9 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
+
+
 class baseChromeWebScraper:
     """Recommended imports:\n
     import selenium\n
@@ -69,7 +72,7 @@ class baseChromeWebScraper:
                 self.driver.get(self.url) # goes to starting url
         except selenium.common.exceptions.WebDriverException:
             if importlib.util.find_spec("autoChromeDriver") is not None:
-                import autoChromeDriver
+                import lib.autoChromeDriver as autoChromeDriver
                 self.webDriverPath = autoChromeDriver.autoInstall(browserPath=self.browser)
                 self.setup()
         except Exception as err:
