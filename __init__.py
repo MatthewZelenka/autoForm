@@ -1,1 +1,1 @@
-import autoCovidForm
+import autoForm
