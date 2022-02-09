@@ -1,10 +1,14 @@
-# from lib.google import autoLogin, formFiller
+import time, pathlib
 from lib import google
 from dataclasses import dataclass
-from autoCovidForm import * # from lib.webScraper import *
-import time
+from autoForm import *
 
-form = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform"
+
+plugName = pathlib.Path(__file__).stem
+
+form = "https://docs.google.com/forms/d/e/1FAIpQLSe7KN_LlhllKPWnBJANeZf3cNFbBijRcCtj0Jf3ARQ0mUqZ7w/viewform"
+
+# form = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform"
 
 # page procedures when in yrdsb login page
 @dataclass
@@ -27,6 +31,13 @@ class yrdsbLogin:
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "LoginButton")))
         self.driver.find_element(By.NAME, "LoginButton").click()
 
+def waitToComplete(self, waitTime: int = 10): # function to wait for next page to load before continuing 
+    try:
+        WebDriverWait(self.driver, waitTime).until(lambda driver: google.formFiller.getFormState(self) != "uncomplete")
+        return True
+    except selenium.common.exceptions.TimeoutException:
+        return False
+
 def fillForm(self, profile):
     # does google login and attaches yrdsb login code
     google.autoLogin.login(self=self, profile=profile, pageProcedures=[yrdsbRedirect, yrdsbLogin])
@@ -45,8 +56,8 @@ def fillForm(self, profile):
         google.formFiller.fillForm(self, firstName, lastName, covidScreeningV1, covidScreeningV2)
         time.sleep(5)
         google.formFiller.submit(self)
+    waitToComplete(self)
     print("Form is {}".format(google.formFiller.getFormState(self)))
-    self.waitUrlChange(currentUrl)
     
 def createProfile():
     pass
