@@ -1,22 +1,31 @@
 import json
 from lib.webScraper import *
-# from lib.google import autoLogin
-from plugins import yrdsbCovidForm as yrdsbCovidForm
+import pkgutil
 
 configFile = "user.json"
 
 class autoForm(baseChromeWebScraper):
+    def __init__(self, modules, profileFile, url:str = None, webDriverPath:str = "./chromedriver", browser:str = None, browserDownloadPath:str = None, browserHide:str = False, userAgent:str = None, logLevel: int = None):
+        self.modules = modules
+        self.profileFile = profileFile
+        super().__init__(url, webDriverPath, browser, browserDownloadPath, browserHide, userAgent, logLevel)
+
     def run(self):
+        with open(self.profileFile, "r") as file:
+            profile = json.load(file)
+        
+        module = self.modules[[importedModule.plugName for importedModule in importedModules].index(profile["id"])]
+        self.url = module.form
         self.setup()
-        with open(configFile, "r") as file:
-            yrdsbCovidForm.fillForm(self, json.load(file))
-        # self.autoLogin()
-        # self.fillForm()
+        module.fillForm(self, profile)
 
 # Program starts running
 if __name__ == '__main__':
     #login
-    form = autoForm(url = yrdsbCovidForm.form, browserHide = False, logLevel = 3)
+    modulePath = "plugins"
+    avalableModules = [module for _, module, _ in pkgutil.iter_modules([modulePath])]
+    importedModules = [pkgutil.importlib.import_module("."+module, modulePath) for module in avalableModules]
+    form = autoForm(profileFile = configFile, modules=importedModules, browserHide = False, logLevel = 3)
     form.run()
     form.quit()
     pass
