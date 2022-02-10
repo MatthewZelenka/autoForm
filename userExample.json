@@ -1,5 +1,5 @@
 {
-    "type":"yrdsbCovidForm",
+    "id":"yrdsbCovidForm",
     "enabled": true,
     "user": {
         "userName": "studentID",
