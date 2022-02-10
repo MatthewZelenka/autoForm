@@ -1,7 +1,7 @@
-import time, pathlib
+import pathlib
 from lib import google
 from dataclasses import dataclass
-from autoForm import *
+from lib.webScraper import *
 
 
 plugName = pathlib.Path(__file__).stem
@@ -41,14 +41,12 @@ def fillForm(self, profile):
     google.autoLogin.login(self=self, profile=profile, pageProcedures=[yrdsbRedirect, yrdsbLogin])
 
     # fills google form
-    currentUrl = self.driver.current_url
     if google.formFiller.getFormState(self) == "uncomplete": # fills out form 
         print("Filling out form...")
         google.formFiller.clearAll(self)
 
         test = google.formFiller.multipleChoice(question="Did you read this *", answer=["Yes"])
 
-        google.formFiller.clearAll(self)
         google.formFiller.fillForm(self, test)
         google.formFiller.submit(self)
     waitToComplete(self)

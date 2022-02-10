@@ -1,14 +1,14 @@
 import time, pathlib
 from lib import google
 from dataclasses import dataclass
-from autoForm import *
+from lib.webScraper import *
 
 
 plugName = pathlib.Path(__file__).stem
 
-form = "https://docs.google.com/forms/d/e/1FAIpQLSe7KN_LlhllKPWnBJANeZf3cNFbBijRcCtj0Jf3ARQ0mUqZ7w/viewform"
+# form = "https://docs.google.com/forms/d/e/1FAIpQLSe7KN_LlhllKPWnBJANeZf3cNFbBijRcCtj0Jf3ARQ0mUqZ7w/viewform"
 
-# form = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform"
+form = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform"
 
 # page procedures when in yrdsb login page
 @dataclass
@@ -43,7 +43,6 @@ def fillForm(self, profile):
     google.autoLogin.login(self=self, profile=profile, pageProcedures=[yrdsbRedirect, yrdsbLogin])
 
     # fills google form
-    currentUrl = self.driver.current_url
     if google.formFiller.getFormState(self) == "uncomplete": # fills out form 
         print("Filling out form...")
         google.formFiller.clearAll(self)
