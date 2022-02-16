@@ -2,7 +2,10 @@ import json
 from lib.webScraper import *
 import pkgutil
 
+# user editable start
 configFile = "user.json"
+browserPath = None
+# user editable end
 
 class autoForm(baseChromeWebScraper):
     def __init__(self, modules, profileFile, url:str = None, webDriverPath:str = "./chromedriver", autoWebDriverModule:str = "lib.autoChromeDriver", browser:str = None, browserDownloadPath:str = None, browserHide:str = False, userAgent:str = None, logLevel: int = None):
@@ -25,7 +28,7 @@ if __name__ == '__main__':
     modulePath = "plugins"
     avalableModules = [module for _, module, _ in pkgutil.iter_modules([modulePath])]
     importedModules = [pkgutil.importlib.import_module("."+module, modulePath) for module in avalableModules]
-    form = autoForm(profileFile = configFile, modules=importedModules, browser="/usr/bin/brave", browserHide = False, logLevel = 3)
+    form = autoForm(profileFile = configFile, modules=importedModules, browser=browserPath, browserHide = False, logLevel = 3)
     form.run()
     form.quit()
     pass
