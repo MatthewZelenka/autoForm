@@ -5,10 +5,10 @@ import pkgutil
 configFile = "user.json"
 
 class autoForm(baseChromeWebScraper):
-    def __init__(self, modules, profileFile, url:str = None, webDriverPath:str = "./chromedriver", browser:str = None, browserDownloadPath:str = None, browserHide:str = False, userAgent:str = None, logLevel: int = None):
+    def __init__(self, modules, profileFile, url:str = None, webDriverPath:str = "./chromedriver", autoWebDriverModule:str = "lib.autoChromeDriver", browser:str = None, browserDownloadPath:str = None, browserHide:str = False, userAgent:str = None, logLevel: int = None):
         self.modules = modules
         self.profileFile = profileFile
-        super().__init__(url, webDriverPath, browser, browserDownloadPath, browserHide, userAgent, logLevel)
+        super().__init__(url, webDriverPath, autoWebDriverModule, browser, browserDownloadPath, browserHide, userAgent, logLevel)
 
     def run(self):
         with open(self.profileFile, "r") as file:
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     modulePath = "plugins"
     avalableModules = [module for _, module, _ in pkgutil.iter_modules([modulePath])]
     importedModules = [pkgutil.importlib.import_module("."+module, modulePath) for module in avalableModules]
-    form = autoForm(profileFile = configFile, modules=importedModules, browserHide = False, logLevel = 3)
+    form = autoForm(profileFile = configFile, modules=importedModules, browser="/usr/bin/brave", browserHide = False, logLevel = 3)
     form.run()
     form.quit()
     pass
