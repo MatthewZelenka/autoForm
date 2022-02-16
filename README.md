@@ -16,7 +16,7 @@ Uses selenium and chrome webdriver
 pip install -r requirements.txt
 ```
 2. Make a copy of "userExample.json" and rename it to "user.json"
-3. Fill out the required information on "user.json"
+3. Fill out the required information on "user.json" (fillTimes is WIP)
 
 *If chromedrive is not installed automaticly on run time go to the chrome webdrivers site and download for your version of chrome: https://chromedriver.chromium.org/downloads/*
 
