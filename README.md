@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ## How to run
 Run autoCovidForm.py and it will fill out the google form
 ```
-python autoCovidForm.py
+python autoForm.py
 ```
 *This program has not been tested on macOS and on windows 7 or lower so it may not work correctly on those operating systems*
 > Disclaimer: for educational purpose only.

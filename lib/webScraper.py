@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import selenium, importlib
+import selenium, pkgutil
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -23,10 +23,11 @@ class baseChromeWebScraper:
     from selenium.webdriver.support.ui import WebDriverWait\n
     from selenium.webdriver.support import expected_conditions as EC\n
     """
-    def __init__(self, url:str = None, webDriverPath:str = "./chromedriver", browser:str = None, browserDownloadPath:str = None, browserHide:str = False, userAgent:str = None, logLevel: int = None):
+    def __init__(self, url:str = None, webDriverPath:str = "./chromedriver", autoWebDriverModule:str = "autoChromeDriver", browser:str = None, browserDownloadPath:str = None, browserHide:str = False, userAgent:str = None, logLevel: int = None):
         # sets up the variables for the webscraper class
         self.url = url
         self.webDriverPath = webDriverPath
+        self.autoWebDriverModule = autoWebDriverModule
         self.browser = browser
         self.browserDownloadPath = browserDownloadPath
         self.browserHide = browserHide
@@ -72,9 +73,8 @@ class baseChromeWebScraper:
             if self.url:
                 self.driver.get(self.url) # goes to starting url
         except selenium.common.exceptions.WebDriverException:
-            if importlib.util.find_spec("autoChromeDriver") is not None:
-                import lib.autoChromeDriver as autoChromeDriver
-                self.webDriverPath = autoChromeDriver.autoInstall(browserPath=self.browser)
+            if pkgutil.importlib.util.find_spec(self.autoWebDriverModule) is not None:
+                self.webDriverPath = pkgutil.importlib.import_module(self.autoWebDriverModule).autoInstall(browserPath=self.browser)
                 self.setup()
         except Exception as err:
             print("Driver initiation has stopped working\nShutting down...\n", err) # if something fails in the initiation process it shuts down
