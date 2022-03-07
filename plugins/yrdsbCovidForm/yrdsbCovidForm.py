@@ -1,6 +1,6 @@
-import time, pathlib
-from lib import google
+import pathlib
 from dataclasses import dataclass
+from lib import google
 from lib.webScraper import *
 
 
@@ -58,6 +58,3 @@ def fillForm(self, profile):
         google.formFiller.submit(self)
     waitToComplete(self)
     print("Form is {}".format(google.formFiller.getFormState(self)))
-    
-def createProfile():
-    pass

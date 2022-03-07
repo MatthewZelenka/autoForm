@@ -1,8 +1,7 @@
 import pathlib
-from lib import google
 from dataclasses import dataclass
+from lib import google
 from lib.webScraper import *
-
 
 plugName = pathlib.Path(__file__).stem
 
@@ -51,7 +50,3 @@ def fillForm(self, profile):
         google.formFiller.submit(self)
     waitToComplete(self)
     print("Form is {}".format(google.formFiller.getFormState(self)))
-    
-    
-def createProfile():
-    pass
