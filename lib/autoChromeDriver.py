@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # python 3.10 or higher
-import os, sys, requests, zipfile
+import os, sys, requests, zipfile, lxml
 from bs4 import BeautifulSoup, SoupStrainer
 
 def autoInstall(browserPath = None):

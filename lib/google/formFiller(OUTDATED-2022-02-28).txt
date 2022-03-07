@@ -1,0 +1,93 @@
+# Keeping out of date for now incase google switches back
+
+from dataclasses import dataclass
+from lib.webScraper import *
+from typing import Protocol
+import time
+
+# protical for question inputs
+@dataclass(order=True)
+class question(Protocol):
+    question:str 
+    answer:str
+    def fill(self) -> None:
+        """question type for google forms"""
+
+# question types
+@dataclass(order=True)
+class textbox():
+    question:str 
+    answer:str
+    def fill(self, question) -> None:
+        WebDriverWait(question, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "quantumWizTextinputPaperinputInput")))
+        textbox = question.find_element(By.CLASS_NAME, "quantumWizTextinputPaperinputInput")
+        textbox.send_keys(self.answer)
+
+@dataclass(order=True)
+class multipleChoice():
+    question:str 
+    answer:str
+    def fill(self, question) -> None:
+        WebDriverWait(question, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, "freebirdFormviewerComponentsQuestionRadioChoice.freebirdFormviewerComponentsQuestionRadioOptionContainer")))
+        choices = question.find_elements(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionRadioChoice.freebirdFormviewerComponentsQuestionRadioOptionContainer")
+        for choice in choices:
+            if choice.text in self.answer:
+                WebDriverWait(question, 10).until(EC.element_to_be_clickable(choice))
+                choice.click()
+
+# clears full form
+def clearAll(self):
+    WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonLabel.quantumWizButtonPaperbuttonLabel.exportLabel")))
+    clearForm = self.driver.find_element(By.CLASS_NAME, "freebirdFormviewerViewNavigationClearButton").find_element(By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonLabel.quantumWizButtonPaperbuttonLabel.exportLabel")
+    clearForm.click()
+
+    WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "appsMaterialWizDialogPaperdialogEl.freebirdFormviewerViewNavigationClearDialog.appsMaterialWizDialogPaperdialogTransitionZoom.appsMaterialWizDialogEl.isOpen")))
+    clearFormButtons = self.driver.find_element(By.CLASS_NAME, "appsMaterialWizDialogPaperdialogEl.freebirdFormviewerViewNavigationClearDialog.appsMaterialWizDialogPaperdialogTransitionZoom.appsMaterialWizDialogEl.isOpen").find_elements(By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonLabel.quantumWizButtonPaperbuttonLabel.exportLabel")
+    for button in clearFormButtons:
+        if button.text == "Clear form":
+            button.click()
+    WebDriverWait(self.driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "appsMaterialWizDialogPaperdialogEl.freebirdFormviewerViewNavigationClearDialog.appsMaterialWizDialogPaperdialogTransitionZoom.appsMaterialWizDialogEl.isOpen")))
+
+# get form state
+def getFormState(self):
+    url = self.driver.current_url
+    match(url[url.rindex("/"):]):
+        case "/closedform":
+            return "closed"
+        case "/alreadyresponded":
+            return "answered"
+        case "/viewform":
+            return "uncomplete"
+        case "/formResponse":
+            return "compleated"
+        case _:
+            return "unknown"
+
+# fills form
+def fillForm(self, *questionAnswers: question):
+    for _ in range(3):
+        try:
+            WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseRoot")))
+            questions = self.driver.find_elements(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseRoot")
+            for question in questions:
+                qTry = 1
+                WebDriverWait(question, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseHeader")))
+                for answer in questionAnswers:
+                    if answer.question == str(question.find_element(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseHeader").text):
+                        answer.fill(question)
+                        print("Answered question", qTry)
+                        break
+                    elif qTry == len(questionAnswers): # try and figure out indexing answer because it was jumping by 2 before and not getting to the end questionAnswers.index(answer)
+                        print("Question not found\n{}\nStoping form fillout".format(repr(str(question.find_element(By.CLASS_NAME, "freebirdFormviewerComponentsQuestionBaseHeader").text))))
+                        return
+                    qTry += 1
+            break
+        except exceptions.StaleElementReferenceException:
+            self.waitUrlChange(currentURL=self.driver.current_url, waitTime=0.5)
+    
+
+# submits form
+def submit(self):
+    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "freebirdFormviewerViewNavigationLeftButtons")))
+    submit = self.driver.find_element(By.CLASS_NAME, "freebirdFormviewerViewNavigationLeftButtons").find_element(By.CLASS_NAME, "appsMaterialWizButtonPaperbuttonContent")
+    submit.click()

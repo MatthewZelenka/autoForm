@@ -6,9 +6,11 @@ from lib.webScraper import *
 
 plugName = pathlib.Path(__file__).stem
 
-form = "https://docs.google.com/forms/d/e/1FAIpQLSe7KN_LlhllKPWnBJANeZf3cNFbBijRcCtj0Jf3ARQ0mUqZ7w/viewform"
+# for development 
+# form = "https://docs.google.com/forms/d/e/1FAIpQLSe7KN_LlhllKPWnBJANeZf3cNFbBijRcCtj0Jf3ARQ0mUqZ7w/viewform"
 
-# form = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform"
+# actual form
+form = "https://docs.google.com/forms/d/e/1FAIpQLSedNWLgRdQKVfNqT4gwYrq0PEJqj2vnOL5GHqfopjwnakC-0g/viewform"
 
 # page procedures when in yrdsb login page
 @dataclass
@@ -53,7 +55,6 @@ def fillForm(self, profile):
         covidScreeningV2 = google.formFiller.multipleChoice(question="Have you completed the self-screening test? *\nCOVID 19 School and Child Care Screening Tool is available at https://covid-19.ontario.ca/school-screening/ *Important Update: The Ministry Of Education and the Chief Medical Officer of Health https://www2.yrdsb.ca/sites/default/files/2022-01/EDU-JointParentsLetterJanuary182022-EN.pdf have provided additional information that may affect your screening results, including:", answer=["Yes"])
 
         google.formFiller.fillForm(self, firstName, lastName, covidScreeningV1, covidScreeningV2)
-        time.sleep(2)
         google.formFiller.submit(self)
     waitToComplete(self)
     print("Form is {}".format(google.formFiller.getFormState(self)))
