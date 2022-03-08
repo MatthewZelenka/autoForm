@@ -1,5 +1,5 @@
 # autoForm
-Auto fill covid form for yrdsb\
+Auto fill online forms\
 Uses selenium and chrome webdriver
 ## Requirements
 - [Python 3.10+](https://www.python.org/downloads/)
