@@ -1,4 +1,4 @@
-#!/usr/bin/env /env/bin/python
+#!/usr/bin/env python
 import json, argparse, sys, os
 from lib.webScraper import *
 import pkgutil
