@@ -1,5 +1,8 @@
 import pathlib
-from lib.webScraper import *
+try:
+    from lib.webScraper import *
+except ImportError:
+    pass
 
 plugName = pathlib.Path(__file__).stem
 
