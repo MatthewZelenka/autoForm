@@ -49,7 +49,7 @@ def fillForm(self, profile):
 
     # fills google form
     if google.formFiller.getFormState(self) == "uncomplete": # fills out form 
-        print("Filling out form...")
+        print("Filling out form")
         google.formFiller.clearAll(self)
 
         firstName = google.formFiller.textbox(question="Student First Name *", answer=profile["formInfo"]["firstName"])

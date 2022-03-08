@@ -44,7 +44,7 @@ def fillForm(self, profile):
 
     # fills google form
     if google.formFiller.getFormState(self) == "uncomplete": # fills out form 
-        print("Filling out form...")
+        print("Filling out form")
         google.formFiller.clearAll(self)
 
         test = google.formFiller.multipleChoice(question="Did you read this *", answer=["Yes"])
