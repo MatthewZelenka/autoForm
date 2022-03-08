@@ -14,14 +14,13 @@ form = "https://docs.google.com/forms/d/e/1FAIpQLScOwuXKSvr7Lg2PwrIg-sUQNMAyVJXS
 @dataclass
 class yrdsbRedirect:
     url = "https://google.yrdsb.ca/EasyConnect/"
-    def doPage(self, profile):
-        print("YRDSB redirection...")
+    def doPage(self, profile) -> str:
+        return "YRDSB redirection"
 
 @dataclass
 class yrdsbLogin:
     url = "https://google.yrdsb.ca/LoginFormIdentityProvider/Login.aspx?"
-    def doPage(self, profile):
-        print("Logging in to YRDSB...")
+    def doPage(self, profile) -> str:
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "UserName")))
         login = self.driver.find_element(By.ID, "UserName")
         login.send_keys(profile["user"]["userName"])
@@ -30,6 +29,7 @@ class yrdsbLogin:
         login.send_keys(profile["user"]["password"])
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "LoginButton")))
         self.driver.find_element(By.NAME, "LoginButton").click()
+        return "Logging in to YRDSB"
 
 def waitToComplete(self, waitTime: int = 10): # function to wait for next page to load before continuing 
     try:
