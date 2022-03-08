@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import json, argparse, sys, os
+import json, argparse, sys, os, concurrent.futures
 from lib.webScraper import *
 import pkgutil
 
@@ -30,7 +30,12 @@ def formRun(profileFile: str):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Process online forms automatically")
     parser.add_argument("--forms", metavar="forms", type=str, nargs="*", help="Forms to fill out")
+    parser.add_argument("--enableThreading", action="store_true", default=False, help="Enables multithreading")
     args = parser.parse_args()
 
     formProfiles = args.forms if args.forms and len(args.forms) > 0 else [profileFile for profileFile in os.listdir(os.path.join(sys.path[0],"formProfiles")) if profileFile.endswith('.json')]
-    [formRun(profile) for profile in formProfiles]
+    if args.enableThreading == False:
+        [formRun(profile) for profile in formProfiles]
+    elif args.enableThreading == True:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            resutlts = [executor.submit(formRun, profile)  for profile in formProfiles]
