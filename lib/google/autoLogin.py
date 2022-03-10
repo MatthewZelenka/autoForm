@@ -19,7 +19,7 @@ class googleEmail:
         # gets web element of submit button
         WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "VfPpkd-dgl2Hf-ppHlrf-sM5MNb")))
         self.driver.find_element(By.CLASS_NAME, "VfPpkd-dgl2Hf-ppHlrf-sM5MNb").click()
-        return "Logged in to google"
+        return "Logged into google"
 
 # fills in password
 @dataclass
