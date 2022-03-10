@@ -1,1 +1,1 @@
-from lib import autoChromeDriver, webScraper, factory
+from lib import autoChromeDriver, webScraper
